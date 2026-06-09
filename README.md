@@ -18,12 +18,6 @@ cd shannon-charge-safety
 python -m pip install -e .
 ```
 
-For tests:
-
-```bash
-python -m pip install -e . pytest
-pytest
-```
 
 ## Command-line usage
 
