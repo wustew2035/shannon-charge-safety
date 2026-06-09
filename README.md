@@ -141,18 +141,18 @@ This gives:
 
 For cylindrical ring contacts, do not use a flat width × height approximation unless that is your intended geometric model. Use the manufacturer-specified exposed surface area when available. For segmented or rectangular contacts, width × height may be appropriate if it matches the exposed conductive surface.
 
-## Shannon safety figure
+## Shannon k value safety
 
-![Shannon k safety figure](assets/k_safety.jpg)
+![Shannon k value safety](assets/k_safety.jpg)
 
 **Figure.** Exceeding a Shannon k value of 1.85 may cause neural tissue damage. Figure is from Cogan et al. 2017.
 
 ## Citations
 
-- Cogan et al. Tissue damage thresholds during therapeutic electrical stimulation. Journal of Neural Engineering. 2017. 014001.
-- Shannon RV. A model of safe levels for electrical stimulation. IEEE Transactions on Biomedical Engineering. 1992. 424-426.
-- McCreery et al. Charge density and charge per phase as cofactors in neural injury induced by electrical stimulation. IEEE Transactions on Biomedical Engineering. 1990. 996-1001.
-- McCreery et al. Comparison of neural damage induced by electrical stimulation with faradaic and capacitor electrodes. Annals of Biomedical Engineering. 1988. 463-481.
+- Cogan et al. Tissue damage thresholds during therapeutic electrical stimulation. Journal of Neural Engineering. 2016 Apr;13(2):021001. doi: 10.1088/1741-2560/13/2/021001.
+- Shannon RV. A model of safe levels for electrical stimulation. IEEE Transactions on Biomedical Engineering. 1992 Apr;39(4):424-6. doi: 10.1109/10.126616.
+- McCreery et al. Charge density and charge per phase as cofactors in neural injury induced by electrical stimulation. IEEE Transactions on Biomedical Engineering. 1990 Oct;37(10):996-1001. doi: 10.1109/10.102812.
+- McCreery et al. Comparison of neural damage induced by electrical stimulation with faradaic and capacitor electrodes. Annals of Biomedical Engineering. 1988;16(5):463-81. doi: 10.1007/BF02368010.
 
 ## License
 
