@@ -13,7 +13,7 @@ where `Q` is charge per phase in `uC/phase` and `D` is charge density in `uC/cm^
 ## Install
 
 ```bash
-git clone https://github.com/sw-neuromod/shannon-charge-safety.git
+git clone https://github.com/wustew2035/shannon-charge-safety.git
 cd shannon-charge-safety
 python -m pip install -e .
 ```
