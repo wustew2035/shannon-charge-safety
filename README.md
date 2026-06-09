@@ -58,7 +58,7 @@ Pulse width:           60 us
 Surface area:          1.2 mm^2 (0.012 cm^2)
 Charge per phase:      0.18 uC/phase
 Charge density:        15 uC/cm^2/phase
-Shannon k:             0.447158
+Shannon k:             0.431364
 ```
 
 ### Option 2: surface area as a single value in mm²
