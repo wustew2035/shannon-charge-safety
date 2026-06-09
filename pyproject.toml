@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "shannon-charge-safety"
+version = "0.1.0"
+description = "Calculate electrical stimulation charge per phase, charge density, and Shannon k value."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+  {name = "sw_neuromod"}
+]
+keywords = ["neurostimulation", "DBS", "charge density", "Shannon", "electrical stimulation"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: Medical Science Apps."
+]
+
+[project.urls]
+Homepage = "https://github.com/sw-neuromod/shannon-charge-safety"
+Repository = "https://github.com/sw-neuromod/shannon-charge-safety"
+
+[project.scripts]
+shannon-charge-safety = "shannon_charge_safety.cli:main"
+charge-safety = "shannon_charge_safety.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/shannon_charge_safety"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
