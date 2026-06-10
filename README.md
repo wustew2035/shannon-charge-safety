@@ -33,7 +33,7 @@ You can enter electrode surface area in either of two ways.
 Use this when the exposed electrode surface is the lateral surface of a cylindrical contact:
 
 ```bash
-shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 0.8 --height-mm 1.5
+shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 1.36 --height-mm 1.5
 ```
 
 This calculates area as:
@@ -49,10 +49,10 @@ Charge safety calculation
 -------------------------
 Current:               6 mA
 Pulse width:           60 us
-Surface area:          3.76991 mm^2 (0.0376991 cm^2)
+Surface area:          6.40885 mm^2 (0.0640885 cm^2)
 Charge per phase:      0.36 uC/phase
-Charge density:        9.5493 uC/cm^2/phase
-Shannon k:             0.536274
+Charge density:        5.61723 uC/cm^2/phase
+Shannon k:             0.305825
 ```
 
 ### Medtronic segmented-lead modifier
@@ -93,7 +93,7 @@ from shannon_charge_safety import calculate_charge_safety
 result = calculate_charge_safety(
     current_mA=3,
     pulse_width_us=60,
-    diameter_mm=0.8,
+    diameter_mm=1.36,
     height_mm=1.5,
 )
 print(result.charge_density_uC_per_cm2)
@@ -133,18 +133,18 @@ D = Q_uC / area_cm2
 k = log10(Q_uC) + log10(D)
 ```
 
-## Example: 0.8 mm diameter × 1.5 mm height cylindrical contact
+## Example: 1.36 mm diameter × 1.5 mm height cylindrical contact
 
 ```bash
-shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 0.8 --height-mm 1.5
+shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 1.36 --height-mm 1.5
 ```
 
 This gives:
 
-- Surface area: `3.77 mm^2 = 0.0377 cm^2`
+- Surface area: `6.41 mm^2 = 0.0641 cm^2`
 - Charge per phase: `0.36 uC/phase`
-- Charge density: approximately `9.55 uC/cm^2/phase`
-- Shannon k: approximately `0.536`
+- Charge density: approximately `5.62 uC/cm^2/phase`
+- Shannon k: approximately `0.306`
 
 ## Important geometry caveat
 
