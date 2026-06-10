@@ -57,7 +57,7 @@ shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 1.36 --he
 This calculates area as:
 
 ```text
-area_mm2 = pi * diameter_mm * height_mm
+surface_area_mm2 = pi * diameter_mm * height_mm
 ```
 
 Example output:
@@ -148,13 +148,13 @@ Q_uC = current_mA * pulse_width_us / 1000
 ### Area conversion
 
 ```text
-area_cm2 = area_mm2 / 100
+surface_area_cm2 = surface_area_mm2 / 100
 ```
 
 ### Charge density
 
 ```text
-D = Q_uC / area_cm2
+D = Q_uC / surface_area_cm2
 ```
 
 ### Shannon k value
