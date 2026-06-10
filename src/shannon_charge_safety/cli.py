@@ -15,7 +15,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--current-ma", type=float, required=True, help="Stimulation current in mA")
     parser.add_argument("--pulse-width-us", type=float, required=True, help="Pulse width in microseconds")
 
-    parser.add_argument("--area-mm2", type=float, help="Electrode surface area in mm^2")
+    parser.add_argument("--surface-area-mm2", type=float, help="Electrode surface area in mm^2")
     parser.add_argument("--diameter-mm", type=float, help="Cylindrical electrode diameter in mm")
     parser.add_argument("--height-mm", type=float, help="Exposed cylindrical electrode height in mm; area = pi * diameter * height")
 
@@ -46,17 +46,17 @@ def main(argv: list[str] | None = None) -> int:
         "current_mA": args.current_ma,
         "pulse_width_us": args.pulse_width_us,
     }
-    has_area = args.area_mm2 is not None
+    has_area = args.surface_area_mm2 is not None
     has_dimensions = args.diameter_mm is not None or args.height_mm is not None
     if has_area and has_dimensions:
-        parser.error("Provide either --area-mm2 OR both --diameter-mm and --height-mm, not both")
+        parser.error("Provide either --surface-area-mm2 OR both --diameter-mm and --height-mm, not both")
     if not has_area and not has_dimensions:
-        parser.error("Provide --area-mm2 OR both --diameter-mm and --height-mm")
+        parser.error("Provide --surface-area-mm2 OR both --diameter-mm and --height-mm")
     if has_dimensions and (args.diameter_mm is None or args.height_mm is None):
         parser.error("Both --diameter-mm and --height-mm are required when using cylindrical dimensions")
 
     if has_area:
-        kwargs["area_mm2"] = args.area_mm2
+        kwargs["area_mm2"] = args.surface_area_mm2
     else:
         kwargs["diameter_mm"] = args.diameter_mm
         kwargs["height_mm"] = args.height_mm

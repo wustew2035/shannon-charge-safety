@@ -60,13 +60,13 @@ Shannon k:             0.536274
 Use this when you already know the exposed electrode surface area:
 
 ```bash
-shannon-charge-safety --current-ma 3 --pulse-width-us 60 --area-mm2 1.2
+shannon-charge-safety --current-ma 3 --pulse-width-us 60 --surface-area-mm2 1.2
 ```
 
 ### JSON output
 
 ```bash
-shannon-charge-safety --current-ma 3 --pulse-width-us 60 --area-mm2 1.2 --json
+shannon-charge-safety --current-ma 3 --pulse-width-us 60 --surface-area-mm2 1.2 --json
 ```
 
 ## Python usage
@@ -133,7 +133,7 @@ This gives:
 
 ## Important geometry caveat
 
-For cylindrical ring contacts, `--diameter-mm` and `--height-mm` use the lateral cylindrical surface area: `pi × diameter_mm × height_mm`. This excludes the circular end caps. Use `--area-mm2` instead when you already know the manufacturer-specified exposed conductive surface area or when the contact geometry is segmented, rectangular, or otherwise non-cylindrical.
+For cylindrical ring contacts, `--diameter-mm` and `--height-mm` use the lateral cylindrical surface area: `pi × diameter_mm × height_mm`. This excludes the circular end caps. Use `--surface-area-mm2` instead when you already know the manufacturer-specified exposed conductive surface area or when the contact geometry is segmented, rectangular, or otherwise non-cylindrical.
 
 ## Shannon k value safety
 
