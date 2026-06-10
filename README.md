@@ -33,7 +33,7 @@ You can enter electrode surface area in either of two ways.
 Use this when the exposed electrode surface is the lateral surface of a cylindrical contact:
 
 ```bash
-shannon-charge-safety --current-ma 3 --pulse-width-us 60 --diameter-mm 0.8 --height-mm 1.5
+shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 0.8 --height-mm 1.5
 ```
 
 This calculates area as:
@@ -47,12 +47,12 @@ Example output:
 ```text
 Charge safety calculation
 -------------------------
-Current:               3 mA
+Current:               6 mA
 Pulse width:           60 us
 Surface area:          3.76991 mm^2 (0.0376991 cm^2)
-Charge per phase:      0.18 uC/phase
-Charge density:        4.77465 uC/cm^2/phase
-Shannon k:             -0.0657861
+Charge per phase:      0.36 uC/phase
+Charge density:        9.5493 uC/cm^2/phase
+Shannon k:             0.536274
 ```
 
 ### Option 2: surface area as a single value in mm²
