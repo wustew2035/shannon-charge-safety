@@ -89,7 +89,7 @@ shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 1.36 --he
 Example for one active Medtronic segment when entering the full ring/level surface area directly:
 
 ```bash
-shannon-charge-safety --current-ma 3 --pulse-width-us 60 --surface-area-mm2 1.2 --medtronic-segment 1
+shannon-charge-safety --current-ma 6 --pulse-width-us 60 --surface-area-mm2 6.41 --medtronic-segment 1
 ```
 
 If your `--surface-area-mm2` value already represents the final active segmented-contact area, do **not** also use `--medtronic-segment`; otherwise the area will be fraction-scaled twice.
@@ -99,13 +99,13 @@ If your `--surface-area-mm2` value already represents the final active segmented
 Use this when you already know the exposed electrode surface area:
 
 ```bash
-shannon-charge-safety --current-ma 3 --pulse-width-us 60 --surface-area-mm2 1.2
+shannon-charge-safety --current-ma 6 --pulse-width-us 60 --surface-area-mm2 6.41
 ```
 
 ### JSON output
 
 ```bash
-shannon-charge-safety --current-ma 3 --pulse-width-us 60 --surface-area-mm2 1.2 --json
+shannon-charge-safety --current-ma 6 --pulse-width-us 60 --surface-area-mm2 6.41 --json
 ```
 
 ## Python usage
@@ -116,7 +116,7 @@ from shannon_charge_safety import calculate_charge_safety
 # Area input option 1: cylinder diameter and height in mm
 # medtronic_segment=1 applies the one-segment area fraction, 5/18.
 result = calculate_charge_safety(
-    current_mA=3,
+    current_mA=6,
     pulse_width_us=60,
     diameter_mm=1.36,
     height_mm=1.5,
@@ -127,12 +127,12 @@ print(result.shannon_k)
 
 # Area input option 2: surface area in mm^2
 # Python name mirrors the CLI flag --surface-area-mm2.
-# medtronic_segment=1 treats 1.2 mm^2 as the full ring/level area,
+# medtronic_segment=1 treats 6.41 mm^2 as the full ring/level area,
 # then applies the one-segment area fraction, 5/18.
 result = calculate_charge_safety(
-    current_mA=3,
+    current_mA=6,
     pulse_width_us=60,
-    surface_area_mm2=1.2,
+    surface_area_mm2=6.41,
     medtronic_segment=1,
 )
 ```
