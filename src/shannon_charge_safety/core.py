@@ -127,9 +127,9 @@ def calculate_charge_safety(
        (area_mm2 is accepted as a backward-compatible alias)
     2. diameter_mm=<cylinder diameter in mm> and height_mm=<exposed cylinder height in mm>
 
-    If medtronic_segment is 1 or 2, the cylindrical area is multiplied by the
-    corresponding Medtronic segmented-lead area fraction. This modifier is only
-    valid with diameter_mm and height_mm.
+    If medtronic_segment is 1 or 2, the selected surface area is multiplied by
+    the corresponding Medtronic segmented-lead conductive-arc fraction. This can
+    be used with either surface_area_mm2 or diameter_mm/height_mm.
     """
     if surface_area_mm2 is not None and area_mm2 is not None:
         raise ValueError("Provide either surface_area_mm2 OR area_mm2, not both")
@@ -145,15 +145,13 @@ def calculate_charge_safety(
         raise ValueError("Provide surface_area_mm2 OR diameter_mm and height_mm")
     if has_dimensions and (diameter_mm is None or height_mm is None):
         raise ValueError("Both diameter_mm and height_mm are required when using cylindrical dimensions")
-    if medtronic_segment is not None and has_area:
-        raise ValueError("--medtronic-segment can only be used with --diameter-mm and --height-mm")
-
     if surface_area_mm2 is None:
         surface_area_mm2 = surface_area_mm2_from_diameter_height(diameter_mm, height_mm)  # type: ignore[arg-type]
-        if medtronic_segment is not None:
-            surface_area_mm2 *= medtronic_segment_area_fraction(medtronic_segment)
     else:
         surface_area_mm2 = _require_positive("surface_area_mm2", surface_area_mm2)
+
+    if medtronic_segment is not None:
+        surface_area_mm2 *= medtronic_segment_area_fraction(medtronic_segment)
 
     area_cm2 = surface_area_cm2_from_mm2(surface_area_mm2)
     q_uC = charge_per_phase_uC(current_mA, pulse_width_us)

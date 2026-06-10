@@ -77,6 +77,27 @@ def test_calculation_with_medtronic_segment_modifier():
     assert result.charge_density_uC_per_cm2 == pytest.approx(expected_density)
 
 
-def test_medtronic_segment_requires_dimensions():
-    with pytest.raises(ValueError):
-        calculate_charge_safety(current_mA=3, pulse_width_us=60, area_mm2=1.2, medtronic_segment=1)
+def test_calculation_with_surface_area_mm2_and_medtronic_segment_modifier():
+    result = calculate_charge_safety(
+        current_mA=3,
+        pulse_width_us=60,
+        surface_area_mm2=1.2,
+        medtronic_segment=1,
+    )
+    expected_area = 1.2 * (5 / 18)
+    expected_density = 0.18 / (expected_area / 100)
+    assert result.surface_area_mm2 == pytest.approx(expected_area)
+    assert result.charge_density_uC_per_cm2 == pytest.approx(expected_density)
+
+
+def test_calculation_with_area_mm2_alias_and_medtronic_segment_modifier():
+    result = calculate_charge_safety(
+        current_mA=3,
+        pulse_width_us=60,
+        area_mm2=1.2,
+        medtronic_segment=2,
+    )
+    expected_area = 1.2 * (5 / 9)
+    expected_density = 0.18 / (expected_area / 100)
+    assert result.surface_area_mm2 == pytest.approx(expected_area)
+    assert result.charge_density_uC_per_cm2 == pytest.approx(expected_density)

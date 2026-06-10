@@ -12,6 +12,24 @@ where `Q` is charge per phase in `uC/phase` and `D` is charge density in `uC/cm^
 
 ## Install
 
+### Direct install from GitHub
+
+You can install directly from GitHub without manually cloning the repository:
+
+```bash
+python -m pip install git+https://github.com/wustew2035/shannon-charge-safety.git
+```
+
+To upgrade later:
+
+```bash
+python -m pip install --upgrade git+https://github.com/wustew2035/shannon-charge-safety.git
+```
+
+### Editable/development install
+
+Use this option only if you want a local editable copy for development:
+
 ```bash
 git clone https://github.com/wustew2035/shannon-charge-safety.git
 cd shannon-charge-safety
@@ -57,18 +75,24 @@ Shannon k:             0.305825
 
 ### Medtronic segmented-lead modifier
 
-When using cylinder dimensions, you can add `--medtronic-segment 1` or `--medtronic-segment 2` to approximate the active surface area for Medtronic segmented DBS lead models B33005 and B33015. In these leads, each segmented level has 3 segments with a 100° conductive arc per segment, separated by 20° gaps. Therefore:
+You can add `--medtronic-segment 1` or `--medtronic-segment 2` to approximate the active conductive-arc fraction for Medtronic segmented DBS lead models B33005 and B33015. This works with either input style: `--diameter-mm`/`--height-mm` or `--surface-area-mm2`. In these leads, each segmented level has 3 segments with a 100° conductive arc per segment, separated by 20° gaps. Therefore:
 
-- `--medtronic-segment 1` multiplies the full cylindrical ring area by `100/360 = 5/18`.
-- `--medtronic-segment 2` multiplies the full cylindrical ring area by `200/360 = 5/9`.
+- `--medtronic-segment 1` multiplies the selected area by `100/360 = 5/18`.
+- `--medtronic-segment 2` multiplies the selected area by `200/360 = 5/9`.
 
-Example for one active Medtronic segment:
+Example for one active Medtronic segment using cylinder dimensions:
 
 ```bash
 shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 1.36 --height-mm 1.5 --medtronic-segment 1
 ```
 
-This modifier is only valid with `--diameter-mm` and `--height-mm`. If you already know the exposed conductive area, use `--surface-area-mm2` directly instead.
+Example for one active Medtronic segment when entering the full ring/level surface area directly:
+
+```bash
+shannon-charge-safety --current-ma 3 --pulse-width-us 60 --surface-area-mm2 1.2 --medtronic-segment 1
+```
+
+If your `--surface-area-mm2` value already represents the final active segmented-contact area, do **not** also use `--medtronic-segment`; otherwise the area will be fraction-scaled twice.
 
 ### Option 2: surface area as a single value in mm²
 
@@ -105,6 +129,15 @@ result = calculate_charge_safety(
     current_mA=3,
     pulse_width_us=60,
     surface_area_mm2=1.2,
+)
+
+# Medtronic segmented-contact modifier can be used with surface_area_mm2 too.
+# This treats 1.2 mm^2 as the full ring/level area, then applies 5/18.
+result = calculate_charge_safety(
+    current_mA=3,
+    pulse_width_us=60,
+    surface_area_mm2=1.2,
+    medtronic_segment=1,
 )
 ```
 
@@ -149,7 +182,7 @@ This gives:
 
 ## Important geometry caveat
 
-For cylindrical ring contacts, `--diameter-mm` and `--height-mm` use the lateral cylindrical surface area: `pi × diameter_mm × height_mm`. This excludes the circular end caps. For Medtronic B33005/B33015 segmented contacts, `--medtronic-segment` applies the 100°-arc segment fraction to the calculated cylindrical area. Use `--surface-area-mm2` instead when you already know the manufacturer-specified exposed conductive surface area or when the contact geometry is rectangular or otherwise non-cylindrical.
+For cylindrical ring contacts, `--diameter-mm` and `--height-mm` use the lateral cylindrical surface area: `pi × diameter_mm × height_mm`. This excludes the circular end caps. For Medtronic B33005/B33015 segmented contacts, `--medtronic-segment` applies the 100°-arc segment fraction to the selected area, whether that area was calculated from dimensions or supplied with `--surface-area-mm2`. Use `--surface-area-mm2` when you already know the manufacturer-specified surface area or when the contact geometry is rectangular or otherwise non-cylindrical. If that supplied value is already the final active segmented area, omit `--medtronic-segment`.
 
 ## Shannon k value safety
 
