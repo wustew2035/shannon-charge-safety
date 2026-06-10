@@ -114,11 +114,13 @@ shannon-charge-safety --current-ma 3 --pulse-width-us 60 --surface-area-mm2 1.2 
 from shannon_charge_safety import calculate_charge_safety
 
 # Area input option 1: cylinder diameter and height in mm
+# medtronic_segment=1 applies the one-segment area fraction, 5/18.
 result = calculate_charge_safety(
     current_mA=3,
     pulse_width_us=60,
     diameter_mm=1.36,
     height_mm=1.5,
+    medtronic_segment=1,
 )
 print(result.charge_density_uC_per_cm2)
 print(result.shannon_k)
