@@ -15,15 +15,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--current-ma", type=float, required=True, help="Stimulation current in mA")
     parser.add_argument("--pulse-width-us", type=float, required=True, help="Pulse width in microseconds")
 
-    area = parser.add_mutually_exclusive_group(required=True)
-    area.add_argument("--area-mm2", type=float, help="Electrode surface area in mm^2")
-    area.add_argument(
-        "--dimensions-mm",
-        nargs=2,
-        type=float,
-        metavar=("DIAMETER", "LENGTH"),
-        help="Cylindrical electrode diameter and exposed length in mm; area = pi * diameter * length",
-    )
+    parser.add_argument("--area-mm2", type=float, help="Electrode surface area in mm^2")
+    parser.add_argument("--diameter-mm", type=float, help="Cylindrical electrode diameter in mm")
+    parser.add_argument("--height-mm", type=float, help="Exposed cylindrical electrode height in mm; area = pi * diameter * height")
 
     parser.add_argument("--json", action="store_true", help="Print output as JSON")
     return parser
@@ -52,10 +46,20 @@ def main(argv: list[str] | None = None) -> int:
         "current_mA": args.current_ma,
         "pulse_width_us": args.pulse_width_us,
     }
-    if args.area_mm2 is not None:
+    has_area = args.area_mm2 is not None
+    has_dimensions = args.diameter_mm is not None or args.height_mm is not None
+    if has_area and has_dimensions:
+        parser.error("Provide either --area-mm2 OR both --diameter-mm and --height-mm, not both")
+    if not has_area and not has_dimensions:
+        parser.error("Provide --area-mm2 OR both --diameter-mm and --height-mm")
+    if has_dimensions and (args.diameter_mm is None or args.height_mm is None):
+        parser.error("Both --diameter-mm and --height-mm are required when using cylindrical dimensions")
+
+    if has_area:
         kwargs["area_mm2"] = args.area_mm2
     else:
-        kwargs["diameter_mm"], kwargs["length_mm"] = args.dimensions_mm
+        kwargs["diameter_mm"] = args.diameter_mm
+        kwargs["height_mm"] = args.height_mm
 
     result = calculate_charge_safety(**kwargs)
 

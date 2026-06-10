@@ -7,7 +7,7 @@ from .core import (
     charge_per_phase_uC,
     shannon_k,
     surface_area_cm2_from_mm2,
-    surface_area_mm2_from_diameter_length,
+    surface_area_mm2_from_diameter_height,
     surface_area_mm2_from_width_height,
 )
 
@@ -18,6 +18,6 @@ __all__ = [
     "charge_per_phase_uC",
     "shannon_k",
     "surface_area_cm2_from_mm2",
-    "surface_area_mm2_from_diameter_length",
+    "surface_area_mm2_from_diameter_height",
     "surface_area_mm2_from_width_height",
 ]

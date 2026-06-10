@@ -42,24 +42,24 @@ def _require_positive(name: str, value: float) -> float:
     return value
 
 
-def surface_area_mm2_from_diameter_length(diameter_mm: float, length_mm: float) -> float:
+def surface_area_mm2_from_diameter_height(diameter_mm: float, height_mm: float) -> float:
     """Return lateral cylindrical electrode surface area in mm^2.
 
     The exposed lateral surface area of a cylinder is:
-        area = pi * diameter * length
+        area = pi * diameter * height
     """
     diameter_mm = _require_positive("diameter_mm", diameter_mm)
-    length_mm = _require_positive("length_mm", length_mm)
-    return math.pi * diameter_mm * length_mm
+    height_mm = _require_positive("height_mm", height_mm)
+    return math.pi * diameter_mm * height_mm
 
 
 def surface_area_mm2_from_width_height(width_mm: float, height_mm: float) -> float:
-    """Deprecated alias for cylindrical area using diameter and length.
+    """Deprecated alias for cylindrical area using diameter and height.
 
-    Use surface_area_mm2_from_diameter_length(diameter_mm, length_mm).
-    The first argument is interpreted as diameter_mm and the second as length_mm.
+    Use surface_area_mm2_from_diameter_height(diameter_mm, height_mm).
+    The first argument is interpreted as diameter_mm and the second as height_mm.
     """
-    return surface_area_mm2_from_diameter_length(width_mm, height_mm)
+    return surface_area_mm2_from_diameter_height(width_mm, height_mm)
 
 
 def surface_area_cm2_from_mm2(area_mm2: float) -> float:
@@ -101,26 +101,26 @@ def calculate_charge_safety(
     pulse_width_us: float,
     area_mm2: float | None = None,
     diameter_mm: float | None = None,
-    length_mm: float | None = None,
+    height_mm: float | None = None,
 ) -> ChargeSafetyResult:
     """Calculate charge per phase, charge density, and Shannon k.
 
     Provide electrode surface area using exactly one of:
     1. area_mm2=<surface area in mm^2>
-    2. diameter_mm=<cylinder diameter in mm> and length_mm=<exposed cylinder length in mm>
+    2. diameter_mm=<cylinder diameter in mm> and height_mm=<exposed cylinder height in mm>
     """
     has_area = area_mm2 is not None
-    has_dimensions = diameter_mm is not None or length_mm is not None
+    has_dimensions = diameter_mm is not None or height_mm is not None
 
     if has_area and has_dimensions:
-        raise ValueError("Provide either area_mm2 OR diameter_mm and length_mm, not both")
+        raise ValueError("Provide either area_mm2 OR diameter_mm and height_mm, not both")
     if not has_area and not has_dimensions:
-        raise ValueError("Provide area_mm2 OR diameter_mm and length_mm")
-    if has_dimensions and (diameter_mm is None or length_mm is None):
-        raise ValueError("Both diameter_mm and length_mm are required when using dimensions")
+        raise ValueError("Provide area_mm2 OR diameter_mm and height_mm")
+    if has_dimensions and (diameter_mm is None or height_mm is None):
+        raise ValueError("Both diameter_mm and height_mm are required when using cylindrical dimensions")
 
     if area_mm2 is None:
-        area_mm2 = surface_area_mm2_from_diameter_length(diameter_mm, length_mm)  # type: ignore[arg-type]
+        area_mm2 = surface_area_mm2_from_diameter_height(diameter_mm, height_mm)  # type: ignore[arg-type]
     else:
         area_mm2 = _require_positive("area_mm2", area_mm2)
 
