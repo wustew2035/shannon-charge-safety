@@ -20,11 +20,21 @@ def test_area_from_dimensions():
     assert surface_area_cm2_from_mm2(area) == pytest.approx(area / 100)
 
 
-def test_calculation_with_area_mm2():
-    result = calculate_charge_safety(current_mA=3, pulse_width_us=60, area_mm2=1.2)
+def test_calculation_with_surface_area_mm2():
+    result = calculate_charge_safety(current_mA=3, pulse_width_us=60, surface_area_mm2=1.2)
     assert result.charge_per_phase_uC == pytest.approx(0.18)
     assert result.charge_density_uC_per_cm2 == pytest.approx(15.0)
     assert result.shannon_k == pytest.approx(math.log10(0.18) + math.log10(15.0))
+
+
+def test_calculation_with_area_mm2_backward_compatible_alias():
+    result = calculate_charge_safety(current_mA=3, pulse_width_us=60, area_mm2=1.2)
+    assert result.charge_density_uC_per_cm2 == pytest.approx(15.0)
+
+
+def test_surface_area_aliases_are_mutually_exclusive():
+    with pytest.raises(ValueError):
+        calculate_charge_safety(current_mA=3, pulse_width_us=60, surface_area_mm2=1.2, area_mm2=1.2)
 
 
 def test_calculation_with_dimensions():

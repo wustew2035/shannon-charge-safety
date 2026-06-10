@@ -114,6 +114,7 @@ def calculate_charge_safety(
     *,
     current_mA: float,
     pulse_width_us: float,
+    surface_area_mm2: float | None = None,
     area_mm2: float | None = None,
     diameter_mm: float | None = None,
     height_mm: float | None = None,
@@ -122,33 +123,39 @@ def calculate_charge_safety(
     """Calculate charge per phase, charge density, and Shannon k.
 
     Provide electrode surface area using exactly one of:
-    1. area_mm2=<surface area in mm^2>
+    1. surface_area_mm2=<surface area in mm^2>
+       (area_mm2 is accepted as a backward-compatible alias)
     2. diameter_mm=<cylinder diameter in mm> and height_mm=<exposed cylinder height in mm>
 
     If medtronic_segment is 1 or 2, the cylindrical area is multiplied by the
     corresponding Medtronic segmented-lead area fraction. This modifier is only
     valid with diameter_mm and height_mm.
     """
-    has_area = area_mm2 is not None
+    if surface_area_mm2 is not None and area_mm2 is not None:
+        raise ValueError("Provide either surface_area_mm2 OR area_mm2, not both")
+    if surface_area_mm2 is None:
+        surface_area_mm2 = area_mm2
+
+    has_area = surface_area_mm2 is not None
     has_dimensions = diameter_mm is not None or height_mm is not None
 
     if has_area and has_dimensions:
-        raise ValueError("Provide either area_mm2 OR diameter_mm and height_mm, not both")
+        raise ValueError("Provide either surface_area_mm2 OR diameter_mm and height_mm, not both")
     if not has_area and not has_dimensions:
-        raise ValueError("Provide area_mm2 OR diameter_mm and height_mm")
+        raise ValueError("Provide surface_area_mm2 OR diameter_mm and height_mm")
     if has_dimensions and (diameter_mm is None or height_mm is None):
         raise ValueError("Both diameter_mm and height_mm are required when using cylindrical dimensions")
     if medtronic_segment is not None and has_area:
         raise ValueError("--medtronic-segment can only be used with --diameter-mm and --height-mm")
 
-    if area_mm2 is None:
-        area_mm2 = surface_area_mm2_from_diameter_height(diameter_mm, height_mm)  # type: ignore[arg-type]
+    if surface_area_mm2 is None:
+        surface_area_mm2 = surface_area_mm2_from_diameter_height(diameter_mm, height_mm)  # type: ignore[arg-type]
         if medtronic_segment is not None:
-            area_mm2 *= medtronic_segment_area_fraction(medtronic_segment)
+            surface_area_mm2 *= medtronic_segment_area_fraction(medtronic_segment)
     else:
-        area_mm2 = _require_positive("area_mm2", area_mm2)
+        surface_area_mm2 = _require_positive("surface_area_mm2", surface_area_mm2)
 
-    area_cm2 = surface_area_cm2_from_mm2(area_mm2)
+    area_cm2 = surface_area_cm2_from_mm2(surface_area_mm2)
     q_uC = charge_per_phase_uC(current_mA, pulse_width_us)
     density = charge_density_uC_per_cm2(q_uC, area_cm2)
     k = shannon_k(q_uC, density)
@@ -156,7 +163,7 @@ def calculate_charge_safety(
     return ChargeSafetyResult(
         current_mA=float(current_mA),
         pulse_width_us=float(pulse_width_us),
-        surface_area_mm2=area_mm2,
+        surface_area_mm2=surface_area_mm2,
         surface_area_cm2=area_cm2,
         charge_per_phase_uC=q_uC,
         charge_density_uC_per_cm2=density,

@@ -100,10 +100,11 @@ print(result.charge_density_uC_per_cm2)
 print(result.shannon_k)
 
 # Area input option 2: surface area in mm^2
+# Python name mirrors the CLI flag --surface-area-mm2.
 result = calculate_charge_safety(
     current_mA=3,
     pulse_width_us=60,
-    area_mm2=1.2,
+    surface_area_mm2=1.2,
 )
 ```
 

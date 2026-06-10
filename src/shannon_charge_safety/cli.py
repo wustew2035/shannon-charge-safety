@@ -66,7 +66,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("Both --diameter-mm and --height-mm are required when using cylindrical dimensions")
 
     if has_area:
-        kwargs["area_mm2"] = args.surface_area_mm2
+        kwargs["surface_area_mm2"] = args.surface_area_mm2
     else:
         kwargs["diameter_mm"] = args.diameter_mm
         kwargs["height_mm"] = args.height_mm
