@@ -125,14 +125,8 @@ print(result.shannon_k)
 
 # Area input option 2: surface area in mm^2
 # Python name mirrors the CLI flag --surface-area-mm2.
-result = calculate_charge_safety(
-    current_mA=3,
-    pulse_width_us=60,
-    surface_area_mm2=1.2,
-)
-
-# Medtronic segmented-contact modifier can be used with surface_area_mm2 too.
-# This treats 1.2 mm^2 as the full ring/level area, then applies 5/18.
+# medtronic_segment=1 treats 1.2 mm^2 as the full ring/level area,
+# then applies the one-segment area fraction, 5/18.
 result = calculate_charge_safety(
     current_mA=3,
     pulse_width_us=60,
