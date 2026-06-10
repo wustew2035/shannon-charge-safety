@@ -22,8 +22,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/sw-neuromod/shannon-charge-safety"
-Repository = "https://github.com/sw-neuromod/shannon-charge-safety"
+Homepage = "https://github.com/wustew2035/shannon-charge-safety"
+Repository = "https://github.com/wustew2035/shannon-charge-safety"
 
 [project.scripts]
 shannon-charge-safety = "shannon_charge_safety.cli:main"

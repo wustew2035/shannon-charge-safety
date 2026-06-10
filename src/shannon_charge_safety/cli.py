@@ -21,8 +21,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--dimensions-mm",
         nargs=2,
         type=float,
-        metavar=("WIDTH", "HEIGHT"),
-        help="Electrode surface width and height in mm; area = width * height",
+        metavar=("DIAMETER", "LENGTH"),
+        help="Cylindrical electrode diameter and exposed length in mm; area = pi * diameter * length",
     )
 
     parser.add_argument("--json", action="store_true", help="Print output as JSON")
@@ -55,7 +55,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.area_mm2 is not None:
         kwargs["area_mm2"] = args.area_mm2
     else:
-        kwargs["width_mm"], kwargs["height_mm"] = args.dimensions_mm
+        kwargs["diameter_mm"], kwargs["length_mm"] = args.dimensions_mm
 
     result = calculate_charge_safety(**kwargs)
 

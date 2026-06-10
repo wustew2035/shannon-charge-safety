@@ -28,9 +28,9 @@ Required stimulation inputs:
 
 You can enter electrode surface area in either of two ways.
 
-### Option 1: width and height in mm
+### Option 1: cylinder diameter and length in mm
 
-Use this when the exposed electrode surface is reasonably approximated as a rectangle:
+Use this when the exposed electrode surface is the lateral surface of a cylindrical contact:
 
 ```bash
 shannon-charge-safety --current-ma 3 --pulse-width-us 60 --dimensions-mm 0.8 1.5
@@ -39,7 +39,7 @@ shannon-charge-safety --current-ma 3 --pulse-width-us 60 --dimensions-mm 0.8 1.5
 This calculates area as:
 
 ```text
-area_mm2 = width_mm * height_mm
+area_mm2 = pi * diameter_mm * length_mm
 ```
 
 Example output:
@@ -49,10 +49,10 @@ Charge safety calculation
 -------------------------
 Current:               3 mA
 Pulse width:           60 us
-Surface area:          1.2 mm^2 (0.012 cm^2)
+Surface area:          3.76991 mm^2 (0.0376991 cm^2)
 Charge per phase:      0.18 uC/phase
-Charge density:        15 uC/cm^2/phase
-Shannon k:             0.431364
+Charge density:        4.77465 uC/cm^2/phase
+Shannon k:             -0.0657861
 ```
 
 ### Option 2: surface area as a single value in mm²
@@ -74,12 +74,12 @@ shannon-charge-safety --current-ma 3 --pulse-width-us 60 --area-mm2 1.2 --json
 ```python
 from shannon_charge_safety import calculate_charge_safety
 
-# Area input option 1: width and height in mm
+# Area input option 1: cylinder diameter and length in mm
 result = calculate_charge_safety(
     current_mA=3,
     pulse_width_us=60,
-    width_mm=0.8,
-    height_mm=1.5,
+    diameter_mm=0.8,
+    length_mm=1.5,
 )
 print(result.charge_density_uC_per_cm2)
 print(result.shannon_k)
@@ -118,7 +118,7 @@ D = Q_uC / area_cm2
 k = log10(Q_uC) + log10(D)
 ```
 
-## Example: 0.8 mm × 1.5 mm contact
+## Example: 0.8 mm diameter × 1.5 mm length cylindrical contact
 
 ```bash
 shannon-charge-safety --current-ma 6 --pulse-width-us 60 --dimensions-mm 0.8 1.5
@@ -126,14 +126,14 @@ shannon-charge-safety --current-ma 6 --pulse-width-us 60 --dimensions-mm 0.8 1.5
 
 This gives:
 
-- Surface area: `1.2 mm^2 = 0.012 cm^2`
+- Surface area: `3.77 mm^2 = 0.0377 cm^2`
 - Charge per phase: `0.36 uC/phase`
-- Charge density: `30 uC/cm^2/phase`
-- Shannon k: approximately `1.033`
+- Charge density: approximately `9.55 uC/cm^2/phase`
+- Shannon k: approximately `0.536`
 
 ## Important geometry caveat
 
-For cylindrical ring contacts, do not use a flat width × height approximation unless that is your intended geometric model. Use the manufacturer-specified exposed surface area when available. For segmented or rectangular contacts, width × height may be appropriate if it matches the exposed conductive surface.
+For cylindrical ring contacts, `--dimensions-mm` uses the lateral cylindrical surface area: `pi × diameter_mm × length_mm`. This excludes the circular end caps. Use `--area-mm2` instead when you already know the manufacturer-specified exposed conductive surface area or when the contact geometry is segmented, rectangular, or otherwise non-cylindrical.
 
 ## Shannon k value safety
 
