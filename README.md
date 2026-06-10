@@ -65,7 +65,7 @@ When using cylinder dimensions, you can add `--medtronic-segment 1` or `--medtro
 Example for one active Medtronic segment:
 
 ```bash
-shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 1.27 --height-mm 1.5 --medtronic-segment 1
+shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 1.36 --height-mm 1.5 --medtronic-segment 1
 ```
 
 This modifier is only valid with `--diameter-mm` and `--height-mm`. If you already know the exposed conductive area, use `--surface-area-mm2` directly instead.
