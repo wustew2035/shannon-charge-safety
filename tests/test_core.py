@@ -4,6 +4,7 @@ import pytest
 from shannon_charge_safety import (
     calculate_charge_safety,
     charge_per_phase_uC,
+    medtronic_segment_area_fraction,
     surface_area_cm2_from_mm2,
     surface_area_mm2_from_diameter_height,
 )
@@ -43,3 +44,29 @@ def test_area_modes_are_mutually_exclusive():
 def test_positive_values_required():
     with pytest.raises(ValueError):
         calculate_charge_safety(current_mA=0, pulse_width_us=60, area_mm2=1.2)
+
+
+def test_medtronic_segment_area_fraction():
+    assert medtronic_segment_area_fraction(1) == pytest.approx(5 / 18)
+    assert medtronic_segment_area_fraction(2) == pytest.approx(5 / 9)
+    with pytest.raises(ValueError):
+        medtronic_segment_area_fraction(3)
+
+
+def test_calculation_with_medtronic_segment_modifier():
+    result = calculate_charge_safety(
+        current_mA=6,
+        pulse_width_us=60,
+        diameter_mm=0.8,
+        height_mm=1.5,
+        medtronic_segment=1,
+    )
+    expected_area = math.pi * 0.8 * 1.5 * (5 / 18)
+    expected_density = 0.36 / (expected_area / 100)
+    assert result.surface_area_mm2 == pytest.approx(expected_area)
+    assert result.charge_density_uC_per_cm2 == pytest.approx(expected_density)
+
+
+def test_medtronic_segment_requires_dimensions():
+    with pytest.raises(ValueError):
+        calculate_charge_safety(current_mA=3, pulse_width_us=60, area_mm2=1.2, medtronic_segment=1)

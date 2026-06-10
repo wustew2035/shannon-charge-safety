@@ -18,6 +18,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--surface-area-mm2", type=float, help="Electrode surface area in mm^2")
     parser.add_argument("--diameter-mm", type=float, help="Cylindrical electrode diameter in mm")
     parser.add_argument("--height-mm", type=float, help="Exposed cylindrical electrode height in mm; area = pi * diameter * height")
+    parser.add_argument(
+        "--medtronic-segment",
+        type=int,
+        choices=(1, 2),
+        help="Medtronic B33005/B33015 segmented-lead modifier: 1 segment uses 5/18 of cylinder area; 2 segments use 5/9",
+    )
 
     parser.add_argument("--json", action="store_true", help="Print output as JSON")
     return parser
@@ -48,6 +54,10 @@ def main(argv: list[str] | None = None) -> int:
     }
     has_area = args.surface_area_mm2 is not None
     has_dimensions = args.diameter_mm is not None or args.height_mm is not None
+    if args.medtronic_segment is not None and has_area:
+        parser.error("--medtronic-segment can only be used with --diameter-mm and --height-mm")
+    if args.medtronic_segment is not None and not has_dimensions:
+        parser.error("--medtronic-segment requires --diameter-mm and --height-mm")
     if has_area and has_dimensions:
         parser.error("Provide either --surface-area-mm2 OR both --diameter-mm and --height-mm, not both")
     if not has_area and not has_dimensions:
@@ -60,6 +70,8 @@ def main(argv: list[str] | None = None) -> int:
     else:
         kwargs["diameter_mm"] = args.diameter_mm
         kwargs["height_mm"] = args.height_mm
+        if args.medtronic_segment is not None:
+            kwargs["medtronic_segment"] = args.medtronic_segment
 
     result = calculate_charge_safety(**kwargs)
 

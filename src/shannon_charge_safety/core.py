@@ -62,6 +62,21 @@ def surface_area_mm2_from_width_height(width_mm: float, height_mm: float) -> flo
     return surface_area_mm2_from_diameter_height(width_mm, height_mm)
 
 
+def medtronic_segment_area_fraction(segment_count: int) -> float:
+    """Return active-area fraction for Medtronic segmented DBS lead contacts.
+
+    Medtronic B33005/B33015 segmented levels have three 100-degree segments
+    separated by 20-degree gaps. One active segment therefore exposes 100/360 =
+    5/18 of a full cylindrical ring-contact area; two active segments expose
+    200/360 = 5/9.
+    """
+    if segment_count == 1:
+        return 5.0 / 18.0
+    if segment_count == 2:
+        return 5.0 / 9.0
+    raise ValueError("medtronic_segment must be either 1 or 2")
+
+
 def surface_area_cm2_from_mm2(area_mm2: float) -> float:
     """Convert surface area from mm^2 to cm^2.
 
@@ -102,12 +117,17 @@ def calculate_charge_safety(
     area_mm2: float | None = None,
     diameter_mm: float | None = None,
     height_mm: float | None = None,
+    medtronic_segment: int | None = None,
 ) -> ChargeSafetyResult:
     """Calculate charge per phase, charge density, and Shannon k.
 
     Provide electrode surface area using exactly one of:
     1. area_mm2=<surface area in mm^2>
     2. diameter_mm=<cylinder diameter in mm> and height_mm=<exposed cylinder height in mm>
+
+    If medtronic_segment is 1 or 2, the cylindrical area is multiplied by the
+    corresponding Medtronic segmented-lead area fraction. This modifier is only
+    valid with diameter_mm and height_mm.
     """
     has_area = area_mm2 is not None
     has_dimensions = diameter_mm is not None or height_mm is not None
@@ -118,9 +138,13 @@ def calculate_charge_safety(
         raise ValueError("Provide area_mm2 OR diameter_mm and height_mm")
     if has_dimensions and (diameter_mm is None or height_mm is None):
         raise ValueError("Both diameter_mm and height_mm are required when using cylindrical dimensions")
+    if medtronic_segment is not None and has_area:
+        raise ValueError("--medtronic-segment can only be used with --diameter-mm and --height-mm")
 
     if area_mm2 is None:
         area_mm2 = surface_area_mm2_from_diameter_height(diameter_mm, height_mm)  # type: ignore[arg-type]
+        if medtronic_segment is not None:
+            area_mm2 *= medtronic_segment_area_fraction(medtronic_segment)
     else:
         area_mm2 = _require_positive("area_mm2", area_mm2)
 

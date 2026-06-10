@@ -55,6 +55,21 @@ Charge density:        9.5493 uC/cm^2/phase
 Shannon k:             0.536274
 ```
 
+### Medtronic segmented-lead modifier
+
+When using cylinder dimensions, you can add `--medtronic-segment 1` or `--medtronic-segment 2` to approximate the active surface area for Medtronic segmented DBS lead models B33005 and B33015. In these leads, each segmented level has 3 segments with a 100° conductive arc per segment, separated by 20° gaps. Therefore:
+
+- `--medtronic-segment 1` multiplies the full cylindrical ring area by `100/360 = 5/18`.
+- `--medtronic-segment 2` multiplies the full cylindrical ring area by `200/360 = 5/9`.
+
+Example for one active Medtronic segment:
+
+```bash
+shannon-charge-safety --current-ma 6 --pulse-width-us 60 --diameter-mm 1.27 --height-mm 1.5 --medtronic-segment 1
+```
+
+This modifier is only valid with `--diameter-mm` and `--height-mm`. If you already know the exposed conductive area, use `--surface-area-mm2` directly instead.
+
 ### Option 2: surface area as a single value in mm²
 
 Use this when you already know the exposed electrode surface area:
@@ -133,7 +148,7 @@ This gives:
 
 ## Important geometry caveat
 
-For cylindrical ring contacts, `--diameter-mm` and `--height-mm` use the lateral cylindrical surface area: `pi × diameter_mm × height_mm`. This excludes the circular end caps. Use `--surface-area-mm2` instead when you already know the manufacturer-specified exposed conductive surface area or when the contact geometry is segmented, rectangular, or otherwise non-cylindrical.
+For cylindrical ring contacts, `--diameter-mm` and `--height-mm` use the lateral cylindrical surface area: `pi × diameter_mm × height_mm`. This excludes the circular end caps. For Medtronic B33005/B33015 segmented contacts, `--medtronic-segment` applies the 100°-arc segment fraction to the calculated cylindrical area. Use `--surface-area-mm2` instead when you already know the manufacturer-specified exposed conductive surface area or when the contact geometry is rectangular or otherwise non-cylindrical.
 
 ## Shannon k value safety
 
